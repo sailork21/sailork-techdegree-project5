@@ -1,20 +1,25 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField
+from wtforms import StringField, PasswordField, TextAreaField, DateField
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
 Length, EqualTo)
+from wtforms.fields.html5 import DateField
 from models import Entry
 
 
-class AddForm(FlaskForm):
+class AddEditForm(FlaskForm):
     title = StringField(
         'Title',
         validators=[DataRequired()])
-    timeSpent = StringField(
+    date = DateField(
+        'Date',
+        format='%m/%d/%Y',
+        validators=[DataRequired()])
+    duration = StringField(
         'Time Spent',
         validators=[DataRequired()])
-    whatILearned = StringField(
+    learned = TextAreaField(
         'What You Learned',
         validators=[DataRequired()])
-    ResourcesToRemember = StringField(
+    resources = TextAreaField(
         'Resources to Remember',
         validators=[DataRequired()])

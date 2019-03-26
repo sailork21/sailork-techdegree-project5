@@ -8,7 +8,7 @@ DATABASE = SqliteDatabase('journal.db')
 
 class Entry(Model):
     title = CharField(unique=True)
-    date = DateTimeField(default=datetime.datetime.now)
+    date = CharField()
     duration = IntegerField()
     learned = TextField()
     resources = TextField()
@@ -28,8 +28,19 @@ class Entry(Model):
                     resources = resources)
 
 
+
 def get_list():
     return Entry.select()
+
+def edit_entry(id, title, date, duration, learned, resources):
+    with DATABASE.transaction():
+            cls.save(
+                id = id,
+                title = title,
+                date = date,
+                duration = duration,
+                learned = learned,
+                resources = resources)
 
 
 

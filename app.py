@@ -1,5 +1,5 @@
 from flask import (Flask, g, render_template, flash, redirect, url_for,
-abort)
+abort, request)
 from flask_bcrypt import check_password_hash
 from flask_login import (LoginManager, login_user, logout_user, login_required,
 current_user)
@@ -49,33 +49,56 @@ def index():
 @app.route('/entries')
 def list():
     list = models.get_list().limit(100)
-    return render_template('entries.html', list=list)
+    return render_template('index.html', list=list)
 
 
+@app.route('/details/<id>')
+def details(id):
+    detail = models.Entry.select().where(models.Entry.id==id).get()
+    return render_template('detail.html', detail=detail)
 
-@app.route('/entries/edit')
-
-
-@app.route('/entries/delete')
 
 
 @app.route('/entry', methods=('GET', 'POST'))
 def add():
-    form = forms.AddForm()
+    form = forms.AddEditForm()
     if form.validate_on_submit():
         flash("Entry Saved!", 'success')
         models.Entry.create_entry(
             title = form.title.data,
             date = form.date.data,
-            duration = form.timeSpent.data,
-            learned = form.whatILearned.data,
-            resources = form.ResourcesToRemember.data,
+            duration = form.duration.data,
+            learned = form.learned.data,
+            resources = form.resources.data,
         )
-        return redirect(url_for('index'))
+        return redirect('/entries')
     return render_template('new.html', form=form)
 
 
+@app.route('/delete/<id>', methods=('GET', 'POST'))
+def delete(id):
+    entry_delete = models.Entry.select().where(models.Entry.id==id).get().delete_instance()
+    flash("Entry Deleted!", 'success')
+    return redirect(url_for('list'))
 
+
+
+@app.route('/edit/<id>', methods=('GET', 'POST'))
+def edit(id):
+    entry_edit = models.Entry.select().where(models.Entry.id==id).get()
+    form = forms.AddEditForm(obj=entry_edit)
+    if form.validate_on_submit():
+        flash("Entry Saved!", 'success')
+        models.Entry.create_entry(
+            title = form.title.data,
+            date = form.date.data,
+            duration = form.duration.data,
+            learned = form.learned.data,
+            resources = form.resources.data,
+        )
+        entry_delete = models.Entry.select().where(models.Entry.id==id).get().delete_instance()
+        return redirect(url_for('list'))
+    return render_template('edit.html', form=form, id=id)
 
 
 if __name__ == '__main__':
