@@ -111,8 +111,9 @@ def edit(id):
 
 
 @app.route('/tags/<tag>')
-def tags():
-    pass
+def tags(tag):
+    tag_entries = models.get_tags(tag)
+    return render_template('tags.html', tag_entries=tag_entries)
 
 
 

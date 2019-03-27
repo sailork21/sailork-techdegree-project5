@@ -40,6 +40,10 @@ def get_list():
     return Entry.select()
 
 
+def get_tags(tag):
+    return Entry.select().where((Entry.tag1==tag) | (Entry.tag2==tag))
+
+
 
 def initialize():
     DATABASE.connect()
