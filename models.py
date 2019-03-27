@@ -6,42 +6,38 @@ from peewee import *
 
 DATABASE = SqliteDatabase('journal.db')
 
+
+
 class Entry(Model):
-    title = CharField(unique=True)
-    date = CharField()
+    title = CharField()
+    date = DateField()
     duration = IntegerField()
     learned = TextField()
     resources = TextField()
+    tag1 = TextField()
+    tag2 = TextField()
 
     class Meta:
         database = DATABASE
-        order_by = ('-date',)
+        order_by = ('date',)
 
     @classmethod
-    def create_entry(cls, title, date, duration, learned, resources):
+    def create_entry(cls, title, date, duration,
+    learned, resources, tag1, tag2):
         with DATABASE.transaction():
                 cls.create(
                     title = title,
                     date = date,
                     duration = duration,
                     learned = learned,
-                    resources = resources)
+                    resources = resources,
+                    tag1 = tag1,
+                    tag2 = tag2,)
 
 
 
 def get_list():
     return Entry.select()
-
-def edit_entry(id, title, date, duration, learned, resources):
-    with DATABASE.transaction():
-            cls.save(
-                id = id,
-                title = title,
-                date = date,
-                duration = duration,
-                learned = learned,
-                resources = resources)
-
 
 
 

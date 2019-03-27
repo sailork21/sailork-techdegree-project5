@@ -6,14 +6,14 @@ from wtforms.fields.html5 import DateField
 from models import Entry
 
 
+
 class AddEditForm(FlaskForm):
     title = StringField(
         'Title',
         validators=[DataRequired()])
     date = DateField(
         'Date',
-        format='%m/%d/%Y',
-        validators=[DataRequired()])
+        )
     duration = StringField(
         'Time Spent',
         validators=[DataRequired()])
@@ -23,3 +23,11 @@ class AddEditForm(FlaskForm):
     resources = TextAreaField(
         'Resources to Remember',
         validators=[DataRequired()])
+    tag1 = StringField(
+        'Tag 1 (optional)',)
+    tag2 = StringField(
+        'Tag 2 (optional)',)
+
+class LoginForm(FlaskForm):
+    username = StringField("Username", validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])

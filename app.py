@@ -41,15 +41,18 @@ def after_request(response):
     return response
 
 
+
 @app.route('/')
 def index():
-    return 'Hey'
+    return redirect(url_for('list'))
+
 
 
 @app.route('/entries')
 def list():
     list = models.get_list().limit(100)
-    return render_template('index.html', list=list)
+    return render_template('entries.html', list=list)
+
 
 
 @app.route('/details/<id>')
@@ -70,9 +73,12 @@ def add():
             duration = form.duration.data,
             learned = form.learned.data,
             resources = form.resources.data,
+            tag1 = form.tag1.data,
+            tag2 = form.tag2.data,
         )
         return redirect('/entries')
     return render_template('new.html', form=form)
+
 
 
 @app.route('/delete/<id>', methods=('GET', 'POST'))
@@ -95,10 +101,19 @@ def edit(id):
             duration = form.duration.data,
             learned = form.learned.data,
             resources = form.resources.data,
+            tag1 = tag1,
+            tag2 = tag2
         )
         entry_delete = models.Entry.select().where(models.Entry.id==id).get().delete_instance()
         return redirect(url_for('list'))
     return render_template('edit.html', form=form, id=id)
+
+
+
+@app.route('/tags/<tag>')
+def tags():
+    pass
+
 
 
 if __name__ == '__main__':

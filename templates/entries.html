@@ -28,6 +28,7 @@
                         <a href="{{ url_for('details', id=entry.id) }}">{{ entry.title }}</a>
                       </h2>
                       <h3>Date: {{ entry.date }}</h3>
+                      <h3>Tags: <a href="{{ url_for('tags', tag=tag1) }}">{{ entry.tag1 }}</a> <a href="{{ url_for('tags', tag=tag2) }}">{{ entry.tag2 }}</a></h3>
                     </article>
                   {% endfor %}
                 </div>
