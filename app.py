@@ -82,7 +82,7 @@ def logout():
 
 @app.route('/')
 def index():
-    return redirect(url_for('register'))
+    return redirect(url_for('login'))
 
 
 
