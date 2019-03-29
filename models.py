@@ -35,6 +35,7 @@ class Entry(Model):
         model=User,
         backref='entries'
     )
+    slug = CharField()
     title = CharField()
     date = DateField()
     duration = IntegerField()
@@ -46,11 +47,6 @@ class Entry(Model):
     class Meta:
         database = DATABASE
         order_by = ('-date',)
-
-
-def get_tags(tag):
-    return Entry.select().where((Entry.tag1==tag) | (Entry.tag2==tag))
-
 
 
 def initialize():

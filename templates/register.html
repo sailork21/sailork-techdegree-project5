@@ -1,24 +1,46 @@
 <!DOCTYPE html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <h2>Please enter a username and password to register:</h2>
-    <form class="form" action="" method="post">
-      {{ form.hidden_tag() }}
-      {% for field in form %}
-        <div class="field">
-          {% if field.errors %}
-            <div class="notification error">{{ error }}></div>
-          {% endif %}
-        </div>
-        {{ field.label.text }}
-        {{ field }}<br>
-      {% endfor %}
-      <button type="submit" id="submit">Register!</button>
-    </form>
-    <a class="" href="{{ url_for('login') }}"><span>Or Login</span></a>
-  </body>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>MyJournal</title>
+        <link href="https://fonts.googleapis.com/css?family=Cousine:400" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/css?family=Work+Sans:600" rel="stylesheet" type="text/css">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="static/css/normalize.css">
+        <link rel="stylesheet" href="static/css/site.css">
+    </head>
+    <body>
+        <header>
+        </header>
+        <section>
+            <div class="container">
+                <div class="new-entry">
+                    <h2>Enter a username and password to register:</h2>
+                    <form class="form" action="" method="post">
+                      {{ form.hidden_tag() }}
+                      {% for field in form %}
+                        <div class="field">
+                          {% if field.errors %}
+                            {% for error in field.errors %}
+                              <div class="notification error">{{ error }}</div>
+                            {% endfor %}
+                          {% endif %}
+                          {{ field.label.text }}<br>
+                          {{ field }}
+                        </div>
+                      {% endfor %}
+                      <button type="submit" id="submit">Register</button>
+                      or
+                      <a href="{{ url_for('login') }}">Login</a>
+                    </form>
+                </div>
+            </div>
+        </section>
+        <footer>
+            <div>
+                &copy; MyJournal
+            </div>
+        </footer>
+    </body>
 </html>

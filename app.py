@@ -3,6 +3,7 @@ abort, request)
 from flask_bcrypt import check_password_hash
 from flask_login import (LoginManager, login_user, logout_user, login_required,
 current_user)
+from slugify import slugify
 
 import forms
 import models
@@ -95,10 +96,10 @@ def list():
 
 
 
-@app.route('/details/<id>')
+@app.route('/details/<slug>')
 @login_required
-def details(id):
-    detail = models.Entry.select().where(models.Entry.id==id).get()
+def details(slug):
+    detail = models.Entry.select().where(models.Entry.slug==slug).get()
     return render_template('detail.html', detail=detail)
 
 
@@ -109,8 +110,10 @@ def add():
     form = forms.AddEditForm()
     if form.validate_on_submit():
         flash("Entry Saved!", 'success')
+        slug = slugify(form.title.data)
         models.Entry.create(
             user=g.user._get_current_object(),
+            slug = slug,
             title = form.title.data,
             date = form.date.data,
             duration = form.duration.data,
@@ -124,24 +127,27 @@ def add():
 
 
 
-@app.route('/delete/<id>', methods=('GET', 'POST'))
+@app.route('/delete/<slug>', methods=('GET', 'POST'))
 @login_required
-def delete(id):
-    entry_delete = models.Entry.select().where(models.Entry.id==id).get().delete_instance()
+def delete(slug):
+    entry_delete = models.Entry.select().where(
+        models.Entry.slug==slug).get().delete_instance()
     flash("Entry Deleted!", 'success')
     return redirect(url_for('list'))
 
 
 
-@app.route('/edit/<id>', methods=('GET', 'POST'))
+@app.route('/edit/<slug>', methods=('GET', 'POST'))
 @login_required
-def edit(id):
-    entry_edit = models.Entry.select().where(models.Entry.id==id).get()
+def edit(slug):
+    entry_edit = models.Entry.select().where(models.Entry.slug==slug).get()
     form = forms.AddEditForm(obj=entry_edit)
     if form.validate_on_submit():
         flash("Entry Saved!", 'success')
+        slug = slugify(form.title.data)
         models.Entry.create(
             user=g.user._get_current_object(),
+            slug = slug,
             title = form.title.data,
             date = form.date.data,
             duration = form.duration.data,
@@ -150,9 +156,10 @@ def edit(id):
             tag1 = form.tag1.data,
             tag2 = form.tag2.data
         )
-        entry_delete = models.Entry.select().where(models.Entry.id==id).get().delete_instance()
+        entry_delete = models.Entry.select().where(
+            models.Entry.slug==slug).get().delete_instance()
         return redirect(url_for('list'))
-    return render_template('edit.html', form=form, id=id)
+    return render_template('edit.html', form=form)
 
 
 
