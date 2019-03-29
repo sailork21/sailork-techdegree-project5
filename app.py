@@ -110,10 +110,9 @@ def add():
     form = forms.AddEditForm()
     if form.validate_on_submit():
         flash("Entry Saved!", 'success')
-        slug = slugify(form.title.data)
         models.Entry.create(
             user=g.user._get_current_object(),
-            slug = slug,
+            slug = slugify(form.title.data),
             title = form.title.data,
             date = form.date.data,
             duration = form.duration.data,
@@ -144,10 +143,9 @@ def edit(slug):
     form = forms.AddEditForm(obj=entry_edit)
     if form.validate_on_submit():
         flash("Entry Saved!", 'success')
-        slug = slugify(form.title.data)
         models.Entry.create(
             user=g.user._get_current_object(),
-            slug = slug,
+            slug = slugify(form.title.data),
             title = form.title.data,
             date = form.date.data,
             duration = form.duration.data,
