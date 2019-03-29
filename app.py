@@ -42,6 +42,7 @@ def after_request(response):
 
 @app.route('/register', methods=('GET', 'POST'))
 def register():
+    """Registers users with username and password"""
     form = forms.RegisterForm()
     if form.validate_on_submit():
         flash("Thanks for registering!", 'success')
@@ -55,6 +56,7 @@ def register():
 
 @app.route('/login', methods=('GET', 'POST'))
 def login():
+    """Logs users in, checks password"""
     form = forms.LoginForm()
     if form.validate_on_submit():
         try:
@@ -75,6 +77,7 @@ def login():
 @app.route('/logout')
 @login_required
 def logout():
+    """Logs users out"""
     logout_user()
     flash("You've been logged out!", 'success')
     return redirect(url_for('login'))
@@ -90,6 +93,7 @@ def index():
 @app.route('/entries')
 @login_required
 def list():
+    """Lists all entries created by current user"""
     list = current_user.get_entries().limit(100)
     user = current_user
     return render_template('entries.html', list=list)
@@ -99,6 +103,7 @@ def list():
 @app.route('/details/<slug>')
 @login_required
 def details(slug):
+    """Gives details of a selected entry"""
     detail = models.Entry.select().where(models.Entry.slug==slug).get()
     return render_template('detail.html', detail=detail)
 
@@ -107,6 +112,7 @@ def details(slug):
 @app.route('/entry', methods=('GET', 'POST'))
 @login_required
 def add():
+    """Creates entry"""
     form = forms.AddEditForm()
     if form.validate_on_submit():
         flash("Entry Saved!", 'success')
@@ -129,6 +135,7 @@ def add():
 @app.route('/delete/<slug>', methods=('GET', 'POST'))
 @login_required
 def delete(slug):
+    """Deletes entry"""
     entry_delete = models.Entry.select().where(
         models.Entry.slug==slug).get().delete_instance()
     flash("Entry Deleted!", 'success')
@@ -139,6 +146,7 @@ def delete(slug):
 @app.route('/edit/<slug>', methods=('GET', 'POST'))
 @login_required
 def edit(slug):
+    """Edits entry with prepopulated form"""
     entry_edit = models.Entry.select().where(models.Entry.slug==slug).get()
     form = forms.AddEditForm(obj=entry_edit)
     if form.validate_on_submit():
@@ -164,6 +172,7 @@ def edit(slug):
 @app.route('/tags/<tag>')
 @login_required
 def tags(tag):
+    """Lists entries with a particular tag"""
     tag_entries = current_user.get_tags(tag).limit(100)
     user = current_user
     return render_template('tags.html', tag_entries=tag_entries)
